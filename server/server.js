@@ -2,8 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 import patientRouter from './routes/patient.route.js';
 import doctorRouter from './routes/doctor.route.js';
@@ -16,8 +14,7 @@ import securityHeaders from './middleware/basicSecurity.js';
 import { createRateLimiter } from './middleware/rateLimiter.js';
 
 dotenv.config();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -62,13 +59,6 @@ app.use('/email', createRateLimiter({ windowMs: 10 * 60 * 1000, maxRequests: 30,
 app.use('/appointment', appointmentRoute);
 const clientDistPath = path.join(__dirname, '../client/dist');
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(clientDistPath));
-
-  app.get(/^(?!\/(patient|doctor|email|appointment|health)).*/, (_req, res) => {
-    res.sendFile(path.join(clientDistPath, 'index.html'));
-  });
-}
 
 app.use(notFoundHandler);
 app.use(errorHandler);
