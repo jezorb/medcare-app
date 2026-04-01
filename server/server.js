@@ -57,7 +57,6 @@ app.use('/patient', patientRouter);
 app.use('/doctor', doctorRouter);
 app.use('/email', createRateLimiter({ windowMs: 10 * 60 * 1000, maxRequests: 30, keyPrefix: 'otp' }), verifyEmailRoute);
 app.use('/appointment', appointmentRoute);
-const clientDistPath = path.join(__dirname, '../client/dist');
 
 
 app.use(notFoundHandler);
